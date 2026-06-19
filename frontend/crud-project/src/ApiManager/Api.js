@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:5173/api/products', // Replace with your API base URL
+  baseURL: 'http://localhost:5173', // Replace with your API base URL
 });
 
 // You can add request interceptors to handle common tasks like adding tokens to headers

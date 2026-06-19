@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../ApiManager/Api";
 import ProductForm from "../components/ProductForm";
 import ProductTable from "../components/ProductTable";
+import { getProducts, createProduct, updateProduct, deleteProduct } from "../ApiManager/Product";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -11,10 +12,9 @@ const ProductPage = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      const res = await getProducts();
 
-      const res = await API.get("/");
-
-      setProducts(res.data);
+      setProducts(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -28,9 +28,9 @@ const ProductPage = () => {
 
   const addProduct = async (product) => {
     try {
-      const res = await API.post("/", product);
+      const res = await createProduct(product);
 
-      setProducts([...products, res.data]);
+      setProducts([...products, res]);
     } catch (error) {
       console.log(error);
     }
@@ -38,11 +38,10 @@ const ProductPage = () => {
 
   const updateProduct = async (id, product) => {
     try {
-      const res = await API.put(`/${id}`, product);
-
+      const res = await updateProduct(id, product);
       setProducts(
         products.map((p) =>
-          p._id === id ? res.data : p
+          p._id === id ? res : p
         )
       );
 
@@ -54,8 +53,7 @@ const ProductPage = () => {
 
   const deleteProduct = async (id) => {
     try {
-      await API.delete(`/${id}`);
-
+     const res = await deleteProduct(id);
       setProducts(
         products.filter((p) => p._id !== id)
       );
