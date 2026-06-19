@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import API from "../ApiManager/Api";
 import ProductForm from "../components/ProductForm";
 import ProductTable from "../components/ProductTable";
-import { getProducts, createProduct, updateProduct, deleteProduct } from "../ApiManager/Product";
+import {
+  getProducts,
+  createProduct,
+  updateProduct as apiUpdateProduct,
+  deleteProduct as apiDeleteProduct,
+} from "../ApiManager/Product";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -38,7 +42,7 @@ const ProductPage = () => {
 
   const updateProduct = async (id, product) => {
     try {
-      const res = await updateProduct(id, product);
+      const res = await apiUpdateProduct(id, product);
       setProducts(
         products.map((p) =>
           p._id === id ? res : p
@@ -53,7 +57,7 @@ const ProductPage = () => {
 
   const deleteProduct = async (id) => {
     try {
-     const res = await deleteProduct(id);
+      await apiDeleteProduct(id);
       setProducts(
         products.filter((p) => p._id !== id)
       );
