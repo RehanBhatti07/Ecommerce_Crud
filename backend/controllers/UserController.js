@@ -1,11 +1,14 @@
 const User = require("../models/UserModel");
 
+
+
 // CREATE USER
 const createUser = async (req, res) => {
     try {
         const user = await User.create(req.body);
+        const token = user.createJWT();
 
-        res.status(201).json(user);
+        res.status(201).json({ user, token });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -48,7 +51,10 @@ const updateUser = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).json(user);
+        const token = user.createJWT();
+
+
+        res.status(200).json({ user, token });
     } catch (error) {
         res.status(500).json({
             message: error.message
