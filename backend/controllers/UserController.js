@@ -16,6 +16,49 @@ const createUser = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+    console.log("Login route hit");
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Please provide email and password" });
+    }
+
+    try {
+        const user = await User.findOne({
+            email
+        });
+        if (!user) {
+            return res.status(401).json({ message: "Invalid Credentials" });
+        }
+        const isPasswordCorrect = await user.comparePassword(password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ message: "Invalid Credentials" });
+        }
+        const token = user.createJWT();
+        res.status(200).json({ user, token });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+
+const logout = async (req, res) => {
+        try {
+
+            res.status(200).json({
+                message: "User Logged Out Successfully"
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    };
+
 // GET ALL USERS
 const getUsers = async (req, res) => {
     try {
@@ -82,5 +125,8 @@ module.exports = {
     getUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    login,
+    logout
 };
+   
